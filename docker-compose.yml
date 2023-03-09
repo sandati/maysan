@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+
+  database_maysan:
+    image: db_maysan
+    container_name: "database_maysan"
+    build: ./database
+
+  app_maysan:
+    image: app_maysan
+    container_name: "maysan"
+    build: .
+    depends_on:
+      - database_maysan
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 8000:8000
+    command: python manage.py runserver 0.0.0.0:8000
