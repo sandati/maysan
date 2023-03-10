@@ -16,6 +16,9 @@ Link database online(sqlite): ```https://sqliteonline.com/```
 - Create and launch database
 - Command ```docker-compose up``` or ```docker compose up```, don't have permission add ```sudo``` at the beginning of the command.
 
+**Launch migration**
+- Command ```python manage.py migrate```
+
 **Launch project**
 - In the other terminer
 - Command ```python manage.py runserver ```
