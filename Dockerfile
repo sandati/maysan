@@ -3,12 +3,34 @@ FROM python:3
 ENV PYTHONUNBUFFRED=1
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /usr/src/app
-
 RUN pip install --upgrade pip
 
-COPY ./requirements.txt /usr/src/app
+RUN adduser myuser
 
-RUN pip install -r requirements.txt
+USER myuser
+
+WORKDIR /project
+
+COPY --chown=myuser:myuser requirements.txt requirements.txt
+
+RUN pip install --user -r requirements.txt
+RUN pip install --user mysqlclient
+RUN pip install --user pymysql
+
+ENV PATH="/project/.local/bin:${PATH}"
+
+COPY --chown=myuser:myuser . .
+
+RUN echo $(ls -al ../)
+
+RUN echo $(ls -al)
+
+# ADD ./ .
+
+# RUN pip install -r requirements.txt
+
+# RUN pip install mysqlclient
 
 EXPOSE 8000
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
