@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="main-block">
+        <h1>Login</h1>
+        <form action="/home">
+            <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
+            <input type="text" name="name" id="name" placeholder="Email" required/>
+
+            <label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
+            <input type="password" name="name" id="name" placeholder="Password" required/>
+
+            <div class="btn-block">
+                <button type="submit" href="/">Submit</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
