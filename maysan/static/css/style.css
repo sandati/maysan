@@ -2,3 +2,12 @@ body {
     background-color: rgb(1, 255, 170);
     color: #013110;
 }
+/* body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif} */
+/* .w3-bar,h1,button {font-family: "Montserrat", sans-serif} */
+.fa-anchor,.fa-coffee {font-size:200px}
+.w3-container {
+    background-color: rgb(1, 255, 170);
+}
+.w3-margin {
+    color: #013110;
+}
