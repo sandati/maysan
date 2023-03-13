@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+
 from .models import *
 
 def index(request):
@@ -7,7 +9,12 @@ def index(request):
 
 
 def register(request):
-    data = {}
+    form = UserCreationForm(request.POST)
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+    data = {'form': form}
     return render(request, "register.html", context=data)
 
 

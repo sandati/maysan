@@ -9,14 +9,14 @@ services:
     ports:
       - "3306:3306"
 
-  app_maysan:
-    image: app_maysan
-    container_name: "maysan"
-    build: .
-    depends_on:
-      - database_maysan
-    volumes:
-      - .:/project/
-    ports:
-      - 8000:8000
-    command: python manage.py runserver 0.0.0.0:8000
+  # app_maysan:
+  #   image: app_maysan
+  #   container_name: "maysan"
+  #   build: .
+  #   depends_on:
+  #     - database_maysan
+  #   volumes:
+  #     - .:/project/
+  #   ports:
+  #     - 8000:8000
+  #   command: python manage.py runserver 0.0.0.0:8000
