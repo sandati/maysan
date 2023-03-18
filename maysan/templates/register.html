@@ -18,16 +18,24 @@
     </div>
 
     <div class="main-block">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         <h1>Registration</h1>
-        <form method="POST" action="/home">
+        <form method="POST" action="{% url 'register' %}" enctype="multipart/form-data">
+            {% csrf_token %}
             <label id="icon" for="name"><i class="fas fa-user"></i></label>
             <input type="text" name="name" id="name" placeholder="Name" required/>
 
             <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
-            <input type="text" name="name" id="name" placeholder="Email" required/>
+            <input type="text" name="email" id="email" placeholder="Email" required/>
 
             <label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
-            <input type="password" name="name" id="name" placeholder="Password" required/>
+            <input type="password" name="password" id="password" placeholder="Password" required/>
 
             <div class="btn-block">
                 <button type="submit" href="/">Submit</button>

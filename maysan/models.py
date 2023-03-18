@@ -7,7 +7,6 @@ class User(models.Model):
     password = models.CharField(max_length=100)
 
     class Meta:
-        # manage = False
         db_table = 'user'
 
 
@@ -21,5 +20,4 @@ class Message(models.Model):
     seen = models.BooleanField(default=False)
 
     class Meta:
-        # manage = False
         db_table = 'message'
