@@ -67,12 +67,23 @@ def home(request, id):
     name = user.values_list('name')[0][0]
     fmsg = Message.objects.filter(from_msg=id)
     tmsg = Message.objects.filter(to_msg=id)
-    print("from:", fmsg)
-    print("to:", tmsg)
+    # print("from:", fmsg)
+    # print("to:", tmsg)
+    # print("from size:", fmsg.count())
+    # print("to size:", tmsg.count())
     for f in fmsg:
-        print
+        # print('f:', f)
         userf = User.objects.filter(id=f.from_msg)
         usert = User.objects.filter(id=f.to_msg)
+        # print("id", f.id)
+        # print("from_name", userf.values_list('name')[0][0])
+        # print("from_email", userf.values_list('email')[0][0])
+        # print("to_name", usert.values_list('name')[0][0])
+        # print("to_email", usert.values_list('email')[0][0])
+        # print("subject", f.object_message)
+        # print("content", f.content)
+        # print("date", f.date_time)
+        # print("seen", f.seen)
         from_msg.append({
             "id": f.id,
             "from_name": userf.values_list('name')[0][0],
@@ -81,13 +92,23 @@ def home(request, id):
             "to_email": usert.values_list('email')[0][0],
             "subject": f.object_message,
             "content": f.content,
-            "date": f.date_time,
-            "seen": f.seen,
+            "date": f.date_time.strftime("%d/%m/%Y, %H:%M:%S"),
+            "seen": int(f.seen),
         })
     for t in tmsg:
+        # print('t:', t)
         userf = User.objects.filter(id=t.from_msg)
         usert = User.objects.filter(id=t.to_msg)
-        from_msg.append({
+        # print("id", t.id)
+        # print("from_name", userf.values_list('name')[0][0])
+        # print("from_email", userf.values_list('email')[0][0])
+        # print("to_name", usert.values_list('name')[0][0])
+        # print("to_email", usert.values_list('email')[0][0])
+        # print("subject", t.object_message)
+        # print("content", t.content)
+        # print("date", t.date_time)
+        # print("seen", t.seen)
+        to_msg.append({
             "id": t.id,
             "from_name": userf.values_list('name')[0][0],
             "from_email": userf.values_list('email')[0][0],
@@ -95,9 +116,13 @@ def home(request, id):
             "to_email": usert.values_list('email')[0][0],
             "subject": t.object_message,
             "content": t.content,
-            "date": t.date_time,
-            "seen": t.seen,
+            "date": t.date_time.strftime("%d/%m/%Y, %H:%M:%S"),
+            "seen": int(t.seen),
         })
+    # print("from msg:", from_msg)
+    # print("to msg:", to_msg)
+    # print("size from:", len(from_msg))
+    # print("size to:", len(to_msg))
     context = {
         "user_id": id,
         "user_email": email,
@@ -118,12 +143,12 @@ def home(request, id):
         if valid == True:
             date = datetime.datetime.now()
             usert = User.objects.filter(email=to)
-            print("from_msg:", id)
-            print("to_msg:", usert.values_list('id')[0][0])
-            print("object_message:", subject)
-            print("content:", content)
-            print("date:", date)
-            print("seen:", False)
+            # print("from_msg:", id)
+            # print("to_msg:", usert.values_list('id')[0][0])
+            # print("object_message:", subject)
+            # print("content:", content)
+            # print("date:", date)
+            # print("seen:", False)
             new_message = Message(from_msg=id, to_msg=usert.values_list('id')[0][0], object_message=subject, content=content, date_time=date, seen=False)
             new_message.save()
             messages.success(request, "Email sent with success.")
@@ -131,7 +156,3 @@ def home(request, id):
         # print("subject:", subject)
         # print("content:", content)
     return render(request, "home.html", context)
-
-def email(request):
-    data = {}
-    return render(request, "email.html", context=data)

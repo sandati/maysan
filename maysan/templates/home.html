@@ -56,36 +56,37 @@
     <!-- Side Navigation -->
     <nav class="w3-sidebar w3-bar-block w3-collapse w3-white w3-animate-left w3-card" style="z-index:3;width:320px;" id="mySidebar">
         <a href="javascript:void(0)" onclick="w3_close()" title="Close Sidemenu" class="w3-bar-item w3-button w3-hide-large w3-large">Close <i class="fa fa-remove"></i></a>
+        <a href="#" class="w3-bar-item w3-button">{{ user_name }}, {{ user_email }}</a>
         <a href="javascript:void(0)" class="w3-bar-item w3-button w3-highway-green w3-button w3-hover-black w3-left-align" onclick="document.getElementById('id01').style.display='block'">New Message <i class="w3-padding fa fa-pencil"></i></a>
         <a id="myBtn1" onclick="myFunc('Demo1')" href="javascript:void(0)" class="w3-bar-item w3-button"><i class="fa fa-inbox w3-margin-right"></i>Inbox ({{to}})<i class="fa fa-caret-down w3-margin-left"></i></a>
 
         <!-- Inbox -->
-        {% for message in to_msg %}
-        <div id="Demo1" class="w3-hide w3-animate-left" onload="getFirstChar({{message.content}}, 'i{{message.id}}')">
-            <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onclick="openMail('Email', {{message}});w3_close();" id="firstTab">
-                <div class="w3-container">
-                    <span class="w3-opacity w3-large">{{ message.from_name }}</span>
-                    <h6>Subject: {{ message.subject }}</h6>
-                    <p id="i{{message.id}}"></p>
-                </div>
-            </a>
+        <div id="Demo1" class="w3-hide w3-animate-left" >
+            {% for message in to_msg %}
+                <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onload="getFirstChar({{message.content}}, 'i{{message.id}}')" onclick="openMail('Email', {{message}});w3_close();">
+                    <div class="w3-container">
+                        <span class="w3-opacity w3-large">{{ message.from_name }}</span>
+                        <h6>Subject: {{ message.subject }}</h6>
+                        <p id="i{{message.id}}"></p>
+                    </div>
+                </a>
+            {% endfor %}
         </div>
-        {% endfor %}
 
-        <a id="myBtn2" onclick="myFunc('Demo2')" href="javascript:void(0)" class="w3-bar-item w3-button"><i class="fa fa-paper-plane w3-margin-right"></i>Sent ({{to}})<i class="fa fa-caret-down w3-margin-left"></i></a>
+        <a id="myBtn2" onclick="myFunc('Demo2')" href="javascript:void(0)" class="w3-bar-item w3-button"><i class="fa fa-paper-plane w3-margin-right"></i>Sent ({{from}})<i class="fa fa-caret-down w3-margin-left"></i></a>
 
         <!-- Sent -->
-        {% for message in from_msg %}
-        <div id="{{message.id}}" class="w3-hide w3-animate-left" onload="getFirstChar(message.content, 's{{message.id}}')">
-            <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onclick="openMail('Email', {{message}});w3_close();" id="{{message.id}}">
-                <div class="w3-container">
-                    <span class="w3-opacity w3-large">{{ message.to_name }}</span>
-                    <h6>Subject: {{ message.subject }}</h6>
-                    <p id="s{{message.id}}"></p>
-                </div>
-            </a>
+        <div id="Demo2" class="w3-hide w3-animate-left" >
+            {% for message in from_msg %}
+                <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onload="getFirstChar(message.content, 's{{message.id}}')" onclick="openMail('Email', {{message}});w3_close();" id="{{message.id}}">
+                    <div class="w3-container">
+                        <span class="w3-opacity w3-large">{{ message.to_name }}</span>
+                        <h6>Subject: {{ message.subject }}</h6>
+                        <p id="s{{message.id}}"></p>
+                    </div>
+                </a>
+            {% endfor %}
         </div>
-        {% endfor %}
 
         <a href="#" class="w3-bar-item w3-button"><i class="fa fa-hourglass-end w3-margin-right"></i>Drafts</a>
         <a href="#" class="w3-bar-item w3-button"><i class="fa fa-trash w3-margin-right"></i>Trash</a>
@@ -200,11 +201,11 @@
                 x[i].className = x[i].className.replace(" w3-light-grey", "");
             }
             document.getElementById(personName).style.display = "block";
-            event.currentTarget.className += " w3-light-grey";
             if (message != null) {
+                event.currentTarget.className += " w3-light-grey";
                 document.getElementById("subject").innerHTML = "Subject: " + message.subject;
-                document.getElementById("from").innerHTML = "From " + message.from_name + ", " + message.from_email;
-                document.getElementById("to").innerHTML = "To " + message.to_name + ", " + message.to_name;
+                document.getElementById("from").innerHTML = "From: " + message.from_name + ", " + message.from_email;
+                document.getElementById("to").innerHTML = "To: " + message.to_name + ", " + message.to_email;
                 document.getElementById("date").innerHTML = message.date;
                 document.getElementById("content").innerHTML = message.content;
             }
