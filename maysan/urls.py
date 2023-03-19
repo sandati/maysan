@@ -22,6 +22,6 @@ urlpatterns = [
     path('', index, name="index"),
     path('register/', register, name="register"),
     path('login/', login, name="login"),
-    path('home', home, name="home"),
-    path('email', email, name="email")
+    path('home/<id>', home, name="home"),
+    path('email/', email, name="email")
 ]

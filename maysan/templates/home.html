@@ -4,24 +4,225 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    {% comment %} <link rel="stylesheet" href="{% static 'css/email.css' %}"> {% endcomment %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href='https://fonts.googleapis.com/css?family=RobotoDraft' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-highway.css">
+    <style>
+        .w3-bar-block .w3-bar-item {padding: 16px}
+        body {
+            background-color: rgb(235, 255, 248);
+        }
+        .title {
+            color: #013110;
+        }
+        .box-email {
+            background-color: white;
+            border-width: thick;
+            border-color: #013110;
+            width: 94%;
+            margin-left: 30px;
+            margin-top: 30px;
+        }
+        .info {
+            background: #26a9e0;
+        }
+        .success {
+            background: #03ce40;
+        }
+        .error {
+            background: #ff4747;
+        }
+        .error, .success, .info {
+            margin-right: 10px;
+            margin-left: 10px;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
     <div class="w3-top">
         <div class="w3-bar w3-green w3-card w3-left-align w3-large">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-            <a href="/" class="w3-bar-item w3-button w3-padding-large w3-white">MAYSAN</a>
+            <a href="{% url 'home' id=user_id %}" class="w3-bar-item w3-button w3-padding-large w3-white">MAYSAN</a>
             {% comment %} <a href="/register" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Register</a>
             <a href="/login" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Login</a>
         </div> {% endcomment %}
     </div>
 
-    <!-- Header -->
-    <header class="w3-container w3-center" style="padding:128px 16px">
-        <h1 class="w3-margin w3-jumbo">WELCOME TO MAYSAN (HOME)</h1>
-    </header>
+    <!-- Side Navigation -->
+    <nav class="w3-sidebar w3-bar-block w3-collapse w3-white w3-animate-left w3-card" style="z-index:3;width:320px;" id="mySidebar">
+        <a href="javascript:void(0)" onclick="w3_close()" title="Close Sidemenu" class="w3-bar-item w3-button w3-hide-large w3-large">Close <i class="fa fa-remove"></i></a>
+        <a href="javascript:void(0)" class="w3-bar-item w3-button w3-highway-green w3-button w3-hover-black w3-left-align" onclick="document.getElementById('id01').style.display='block'">New Message <i class="w3-padding fa fa-pencil"></i></a>
+        <a id="myBtn1" onclick="myFunc('Demo1')" href="javascript:void(0)" class="w3-bar-item w3-button"><i class="fa fa-inbox w3-margin-right"></i>Inbox ({{to}})<i class="fa fa-caret-down w3-margin-left"></i></a>
 
+        <!-- Inbox -->
+        {% for message in to_msg %}
+        <div id="Demo1" class="w3-hide w3-animate-left" onload="getFirstChar({{message.content}}, 'i{{message.id}}')">
+            <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onclick="openMail('Email', {{message}});w3_close();" id="firstTab">
+                <div class="w3-container">
+                    <span class="w3-opacity w3-large">{{ message.from_name }}</span>
+                    <h6>Subject: {{ message.subject }}</h6>
+                    <p id="i{{message.id}}"></p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+
+        <a id="myBtn2" onclick="myFunc('Demo2')" href="javascript:void(0)" class="w3-bar-item w3-button"><i class="fa fa-paper-plane w3-margin-right"></i>Sent ({{to}})<i class="fa fa-caret-down w3-margin-left"></i></a>
+
+        <!-- Sent -->
+        {% for message in from_msg %}
+        <div id="{{message.id}}" class="w3-hide w3-animate-left" onload="getFirstChar(message.content, 's{{message.id}}')">
+            <a href="javascript:void(0)" class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey" onclick="openMail('Email', {{message}});w3_close();" id="{{message.id}}">
+                <div class="w3-container">
+                    <span class="w3-opacity w3-large">{{ message.to_name }}</span>
+                    <h6>Subject: {{ message.subject }}</h6>
+                    <p id="s{{message.id}}"></p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+
+        <a href="#" class="w3-bar-item w3-button"><i class="fa fa-hourglass-end w3-margin-right"></i>Drafts</a>
+        <a href="#" class="w3-bar-item w3-button"><i class="fa fa-trash w3-margin-right"></i>Trash</a>
+        <a href="/login" class="w3-bar-item w3-button"><i class="fa fa-sign-out w3-margin-right"></i>Logout</a>
+    </nav>
+
+    <!-- Modal that pops up when you click on "New Message" -->
+    <div id="id01" class="w3-modal" style="z-index:4">
+        <div class="w3-modal-content w3-animate-zoom">
+            <div class="w3-container w3-padding w3-green">
+                <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-green w3-right w3-xxlarge"><i class="fa fa-remove"></i></span>
+                <h2>Send Mail</h2>
+            </div>
+
+            <form method="POST" action="{% url 'home' id=user_id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="w3-panel">
+                    <label>From</label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="text" value="{{ user_email }}" disabled="disabled">
+
+                    <label>To</label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="text" name="to" required>
+
+                    <label>Subject</label>
+                    <input class="w3-input w3-border w3-margin-bottom" type="text" name="subject" required>
+
+                    <input class="w3-input w3-border w3-margin-bottom" style="height:150px" placeholder="Write your email..." name="content" required>
+
+                    <div class="w3-section">
+                        <a class="w3-button w3-green" onclick="document.getElementById('id01').style.display='none'">Cancel<i class="fa fa-remove"></i></a>
+                        {% comment %} <a class="w3-button w3-light-grey w3-right" onclick="document.getElementById('id01').style.display='none'">Send<i class="fa fa-paper-plane"></i></a> {% endcomment %}
+                        <button class="w3-button w3-light-grey w3-right" type="submit" href="/">Send<a><i class="fa fa-paper-plane"></i></a></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay effect when opening the side navigation on small screens -->
+    <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="Close Sidemenu" id="myOverlay"></div>
+
+    <!-- Page content -->
+    <div class="w3-main" style="margin-left:320px;">
+        <i class="fa fa-bars w3-button w3-white w3-hide-large w3-xlarge w3-margin-left w3-margin-top" onclick="w3_open()"></i>
+        <a href="javascript:void(0)" class="w3-hide-large w3-highway-green w3-button w3-right w3-margin-top w3-margin-right" onclick="document.getElementById('id01').style.display='block'"><i class="fa fa-pencil"></i></a>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div id="Home" class="w3-container person title">
+            <br>
+            <h1>Welcome to Maysan</h1>
+            <hr>
+            <h3>Select an item to read.</h3>
+            <h6>Nothing is selected.</h6>
+        </div>
+
+        <div id="Email" class="w3-container person box-email">
+            <br>
+            <h5 class="w3-opacity" id="subject">Subject: Remember Me</h5>
+            <h4 id="from">From Borge Refsnes, Sep 27, 2015.</h4>
+            <h4 id="to">From Borge Refsnes, Sep 27, 2015.</h4>
+            <h4 id="date"><i class="fa fa-clock-o"></i> From Borge Refsnes, Sep 27, 2015.</h4>
+            <a class="w3-button w3-light-grey" href="#">Reply<i class="w3-margin-left fa fa-mail-reply"></i></a>
+            <a class="w3-button w3-light-grey" href="#">Forward<i class="w3-margin-left fa fa-arrow-right"></i></a>
+            <hr>
+            <p id="content">Hello, i just wanted to let you know that i'll be home at lorem ipsum dolor sit amet.</p>
+        </div>
+    </div>
+
+    <script>
+        var openInbox = document.getElementById("myBtn1");
+        openInbox.click();
+
+        var openSent = document.getElementById("myBtn2");
+        openSent.click();
+
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+            document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+            document.getElementById("myOverlay").style.display = "none";
+        }
+
+        function myFunc(id) {
+            var x = document.getElementById(id);
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+                x.previousElementSibling.className += " w3-green";
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+                x.previousElementSibling.className =
+                x.previousElementSibling.className.replace(" w3-green", "");
+            }
+        }
+
+        openMail("Home", null)
+        function openMail(personName, message) {
+            var i;
+            var x = document.getElementsByClassName("person");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            x = document.getElementsByClassName("test");
+            for (i = 0; i < x.length; i++) {
+                x[i].className = x[i].className.replace(" w3-light-grey", "");
+            }
+            document.getElementById(personName).style.display = "block";
+            event.currentTarget.className += " w3-light-grey";
+            if (message != null) {
+                document.getElementById("subject").innerHTML = "Subject: " + message.subject;
+                document.getElementById("from").innerHTML = "From " + message.from_name + ", " + message.from_email;
+                document.getElementById("to").innerHTML = "To " + message.to_name + ", " + message.to_name;
+                document.getElementById("date").innerHTML = message.date;
+                document.getElementById("content").innerHTML = message.content;
+            }
+        }
+
+        function getFirstChar(string, id) {
+            if (string.length > 15) {
+                const newStr = string.substring(0, 15);
+                document.getElementById(id).innerHTML = newStr + "...";
+            } else {
+                document.getElementById(id).innerHTML = string;
+            }
+        }
+    </script>
+  
+    {% comment %} <script>
+        var openTab = document.getElementById("firstTab");
+        openTab.click();
+    </script> {% endcomment %}
 </body>
 </html>

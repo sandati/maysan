@@ -12,8 +12,10 @@ class User(models.Model):
 
 class Message(models.Model):
     id = models.IntegerField(primary_key=True)
-    from_msg = models.ForeignKey(User, on_delete=models.CASCADE, related_name="from_msg")
-    to_msg = models.ForeignKey(User, on_delete=models.CASCADE, related_name="to_msg")
+    # from_msg = models.ForeignKey(User, on_delete=models.CASCADE, related_name="from_msg")
+    # to_msg = models.ForeignKey(User, on_delete=models.CASCADE, related_name="to_msg")
+    from_msg = models.IntegerField()
+    to_msg = models.IntegerField()
     object_message = models.CharField(max_length=100)
     content = models.CharField(max_length=8000)
     date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
